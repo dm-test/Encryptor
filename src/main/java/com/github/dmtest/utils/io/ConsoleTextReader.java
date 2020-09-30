@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOError;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 public class ConsoleTextReader implements TextReader {
     private static final Logger LOG = LoggerFactory.getLogger(ConsoleTextReader.class);
@@ -33,6 +34,16 @@ public class ConsoleTextReader implements TextReader {
             }
         }
 
+    }
+
+    public int readAvailableInt(List<Integer> availableInts) {
+        while (true) {
+            int num = readInt();
+            if (availableInts.contains(num)) {
+                return num;
+            }
+            LOG.error("Введено недопустимое число. Повторите ввод");
+        }
     }
 
     public Command readCommand() {

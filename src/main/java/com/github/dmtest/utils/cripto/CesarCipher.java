@@ -3,7 +3,7 @@ package com.github.dmtest.utils.cripto;
 import static com.github.dmtest.utils.cripto.Command.ENCRYPT;
 
 public class CesarCipher implements Cipher {
-    private final int offset;
+    protected final int offset;
 
     public CesarCipher(int offset) {
         this.offset = offset;
