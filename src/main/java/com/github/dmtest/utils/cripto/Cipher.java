@@ -3,15 +3,24 @@ package com.github.dmtest.utils.cripto;
 public interface Cipher {
     int ABC_CAPACITY = 26;
 
-    default char shiftSymbol(char symbol, int shift) {
-        if (!Character.isLetter(symbol)) {
-            return symbol;
-        }
-        char baseSymbol = Character.isUpperCase(symbol) ? 'A' : 'a';
-        int j = (symbol - baseSymbol + shift) % ABC_CAPACITY;
-        return (char) (j + baseSymbol);
-    }
+    char encryptSymbol(char originalChar);
+    char decryptSymbol(char originalChar);
 
-    String processText(String text, Command cmd);
+    default String processText(String text, Command cmd) {
+        StringBuilder sb = new StringBuilder();
+        char[] inputChars = text.toCharArray();
+        for (char ch : inputChars) {
+            char outputChar;
+            if (!Character.isLetter(ch)) {
+                outputChar = ch;
+            } else if (cmd.equals(Command.ENCRYPT)) {
+                outputChar = encryptSymbol(ch);
+            } else {
+                outputChar = decryptSymbol(ch);
+            }
+            sb.append(outputChar);
+        }
+        return sb.toString();
+    }
 
 }

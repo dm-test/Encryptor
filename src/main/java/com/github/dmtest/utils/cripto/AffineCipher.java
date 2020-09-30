@@ -1,29 +1,30 @@
 package com.github.dmtest.utils.cripto;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.dmtest.utils.cripto.Command.ENCRYPT;
-
-public class AffineCipher extends CesarCipher {
+public class AffineCipher implements Cipher {
     private final int key1;
+    private final int key2;
 
     public AffineCipher(int key1, int key2) {
-        super(key2);
         this.key1 = key1;
+        this.key2 = key2;
     }
 
     @Override
-    public String processText(String text, Command cmd) {
-        int resultOffset = cmd.equals(ENCRYPT) ? offset : -offset;
-        int shift = resultOffset % ABC_CAPACITY + ABC_CAPACITY;
-        StringBuilder sb = new StringBuilder();
-        char[] inputChars = text.toCharArray();
-        for (char ch : inputChars) {
-            char outputChar = shiftSymbol(ch, shift);
-            sb.append(outputChar);
-        }
-        return sb.toString();
+    public char encryptSymbol(char originalChar) {
+        int offset = Character.isUpperCase(originalChar) ? 'A' : 'a';
+        return (char)((key1 * originalChar + key2 - offset) % ABC_CAPACITY + offset);
+    }
+
+    @Override
+    public char decryptSymbol(char originalChar) {
+        int offset = Character.isUpperCase(originalChar) ? 'A' : 'a';
+        int indexTmp1 = modInverse(key1) * (originalChar - key2 - offset) % ABC_CAPACITY;
+        int indexTmp2 = indexTmp1 < 0 ? indexTmp1  + ABC_CAPACITY : indexTmp1;
+        return (char) (indexTmp2 + offset);
     }
 
     public static List<Integer> getAvailableKey1List() {
@@ -37,11 +38,10 @@ public class AffineCipher extends CesarCipher {
     }
 
     private static int gcd(int x, int y){
-        return (y != 0) ? gcd(y, x%y) : x;
+        return (y != 0) ? gcd(y, x % y) : x;
     }
 
-    public static void main(String[] args) {
-        System.out.println((61) % 26);
+    public static int modInverse(int value) {
+       return BigInteger.valueOf(value).modInverse(BigInteger.valueOf(ABC_CAPACITY)).intValue();
     }
-
 }

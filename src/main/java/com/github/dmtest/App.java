@@ -35,6 +35,7 @@ public class App {
                 List<Integer> availableKey1List = AffineCipher.getAvailableKey1List();
                 LOG.info("Введите значение ключа1. Допустимые значения: {}", availableKey1List);
                 int key1 = ctr.readAvailableInt(availableKey1List);
+                LOG.info("Введите значение ключа2");
                 int key2 = ctr.readInt();
                 cipher = new AffineCipher(key1, key2);
                 newText = cipher.processText(originalText, command);

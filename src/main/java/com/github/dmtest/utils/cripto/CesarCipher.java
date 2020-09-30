@@ -1,26 +1,23 @@
 package com.github.dmtest.utils.cripto;
 
-import static com.github.dmtest.utils.cripto.Command.ENCRYPT;
-
 public class CesarCipher implements Cipher {
-    protected final int offset;
+    protected final int shift;
 
-    public CesarCipher(int offset) {
-        this.offset = offset;
+    public CesarCipher(int shift) {
+        this.shift = shift;
     }
 
     @Override
-    public String processText(String text, Command cmd) {
-        int resultOffset = cmd.equals(ENCRYPT) ? offset : -offset;
-        int shift = resultOffset % ABC_CAPACITY + ABC_CAPACITY;
-        StringBuilder sb = new StringBuilder();
-        char[] inputChars = text.toCharArray();
-        for (char ch : inputChars) {
-            char outputChar = shiftSymbol(ch, shift);
-            sb.append(outputChar);
-        }
-        return sb.toString();
+    public char encryptSymbol(char originalChar) {
+        int offset = Character.isUpperCase(originalChar) ? 'A' : 'a';
+        return (char)((originalChar + shift - offset) % ABC_CAPACITY + offset);
     }
 
-
+    @Override
+    public char decryptSymbol(char originalChar) {
+        int offset = Character.isUpperCase(originalChar) ? 'A' : 'a';
+        int indexTmp1 = (originalChar - shift - offset) % ABC_CAPACITY;
+        int indexTmp2 = indexTmp1 < 0 ? indexTmp1  + ABC_CAPACITY : indexTmp1;
+        return (char) (indexTmp2 + offset);
+    }
 }
