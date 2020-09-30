@@ -7,10 +7,12 @@ import java.util.List;
 public class AffineCipher implements Cipher {
     private final int key1;
     private final int key2;
+    private final int key1modInverse;
 
     public AffineCipher(int key1, int key2) {
         this.key1 = key1;
         this.key2 = key2;
+        key1modInverse = BigInteger.valueOf(key1).modInverse(BigInteger.valueOf(ABC_CAPACITY)).intValue();
     }
 
     @Override
@@ -22,8 +24,8 @@ public class AffineCipher implements Cipher {
     @Override
     public char decryptSymbol(char originalChar) {
         int offset = Character.isUpperCase(originalChar) ? 'A' : 'a';
-        int indexTmp1 = modInverse(key1) * (originalChar - key2 - offset) % ABC_CAPACITY;
-        int indexTmp2 = indexTmp1 < 0 ? indexTmp1  + ABC_CAPACITY : indexTmp1;
+        int indexTmp1 = key1modInverse * (originalChar - key2 - offset) % ABC_CAPACITY;
+        int indexTmp2 = indexTmp1 < 0 ? indexTmp1 + ABC_CAPACITY : indexTmp1;
         return (char) (indexTmp2 + offset);
     }
 
@@ -39,9 +41,5 @@ public class AffineCipher implements Cipher {
 
     private static int gcd(int x, int y){
         return (y != 0) ? gcd(y, x % y) : x;
-    }
-
-    public static int modInverse(int value) {
-       return BigInteger.valueOf(value).modInverse(BigInteger.valueOf(ABC_CAPACITY)).intValue();
     }
 }
