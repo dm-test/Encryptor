@@ -1,9 +1,6 @@
 package com.github.dmtest;
 
-import com.github.dmtest.utils.cripto.AffineCipher;
-import com.github.dmtest.utils.cripto.CesarCipher;
-import com.github.dmtest.utils.cripto.Cipher;
-import com.github.dmtest.utils.cripto.Command;
+import com.github.dmtest.utils.cripto.*;
 import com.github.dmtest.utils.io.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +14,7 @@ public class App {
         TextReader ftr = new FileTextReader();
         String originalText = ftr.readText();
         LOG.info("Исходный текст из файла: {}", originalText);
-        LOG.info("Выберите метод шифрования: \n 1 - Шифр Цезаря \n 2 - Аффинный шифр");
+        LOG.info("Выберите метод шифрования: \n 1 - Шифр Цезаря \n 2 - Аффинный шифр \n 3 - Шифр Виженера");
         ConsoleTextReader ctr = new ConsoleTextReader();
         int selectedCipher = ctr.readInt();
         LOG.info("Введите тип операции: \n 1 - Шифрование \n 2 - Дешифровка");
@@ -27,8 +24,8 @@ public class App {
         switch (selectedCipher) {
             case 1:
                 LOG.info("Введите значение сдвига");
-                int offset = ctr.readInt();
-                cipher = new CesarCipher(offset);
+                int shift = ctr.readInt();
+                cipher = new CesarCipher(shift);
                 newText = cipher.processText(originalText, command);
                 break;
             case 2:
@@ -38,6 +35,12 @@ public class App {
                 LOG.info("Введите значение ключа2");
                 int key2 = ctr.readInt();
                 cipher = new AffineCipher(key1, key2);
+                newText = cipher.processText(originalText, command);
+                break;
+            case 3:
+                LOG.info("Введите значение ключа");
+                String key = ctr.readText();
+                cipher = new VigenerCipher(key);
                 newText = cipher.processText(originalText, command);
                 break;
             default:
