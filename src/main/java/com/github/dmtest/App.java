@@ -14,7 +14,7 @@ public class App {
         TextReader ftr = new FileTextReader();
         String originalText = ftr.readText();
         LOG.info("Исходный текст из файла: {}", originalText);
-        LOG.info("Выберите метод шифрования: \n 1 - Шифр Цезаря \n 2 - Аффинный шифр \n 3 - Шифр Виженера");
+        LOG.info("Выберите метод шифрования: \n 1 - Шифр Цезаря \n 2 - Аффинный шифр \n 3 - Шифр Виженера \n 4 - Шифрование гаммированием");
         ConsoleTextReader ctr = new ConsoleTextReader();
         int selectedCipher = ctr.readInt();
         LOG.info("Введите тип операции: \n 1 - Шифрование \n 2 - Дешифровка \n 3 - Взлом");
@@ -47,6 +47,12 @@ public class App {
                     cipher = new VigenerCipher(key);
                     newText = cipher.processText(originalText, command);
                 }
+                break;
+            case 4:
+                LOG.info("Введите значение ключа");
+                int key = ctr.readInt();
+                cipher = new GammaCipher(key);
+                newText = cipher.processText(originalText, command);
                 break;
             default:
                 LOG.error("Выбран некорректный метод шифрования. Операция не выполнена.");
